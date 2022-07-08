@@ -20,8 +20,11 @@ def get_driver():
 if __name__ =="__main__":
   print('creating driver')
   driver = get_driver()
-  
-  print('fetching page')
+
+  print('fetching lists')
   driver.get(zomato_mumbai_url)
+  
   print('title:',driver.title)
+  
+ 
 
