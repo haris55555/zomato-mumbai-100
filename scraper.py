@@ -1,3 +1,4 @@
+import time
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -16,15 +17,21 @@ def get_driver():
  driver = webdriver.Chrome(options=chrome_options)
  return driver
 
-
-if __name__ =="__main__":
-  print('creating driver')
-  driver = get_driver()
-
-  print('fetching lists')
+def get_places(driver):
+  place_divs_tag = 'sc-bke1zw-0'
   driver.get(zomato_mumbai_url)
+  time.sleep(5)
+  places = driver.find_element(By.CLASS_NAME,place_divs_tag)
+tags=places[0].find_elements(By.CLASS_NAME,'sc-bke1zw-1')
+  return places
   
-  print('title:',driver.title)
+  
+if __name__ =="__main__":
+  driver = get_driver()
+  print('fetching lists')
+  places = get_places(driver)
+  len(tags) 
+  
   
  
 
