@@ -32,13 +32,9 @@ if __name__ =="__main__":
 # title of the place,Link, ratings , delivery ratings
   places=get_places(driver)
   place = places[0]
-  title_of_place = place.find_element(By.CLASS_NAME,'sc-llVRWX sc-kINXyz eLeiuV')
-  Name = title_of_place.text
-  Link = title_of_place.get_attribute('href')
-  print('NAME:',Name)
-  print('URL:',Link)
-    
+  hotel =[]
   
-  
- 
 
+  for place in places:
+              
+    hotel.append(place.find_elements(By.CLASS_NAME,'sc-dtPURA sc-eMHdtS kDJmkU')
