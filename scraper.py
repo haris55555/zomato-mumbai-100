@@ -30,11 +30,19 @@ if __name__ =="__main__":
 
   print('parsing the first place')
 # title of the place,Link, ratings , delivery ratings
-  places=get_places(driver)
-  place = places[0]
+  places=get_places(driver)     
+  place=places[0]
   hotel =[]
+  for place in places: 
+    print(place.find_element(By.XPATH,'.//div/section/div[1]/a').text)
   
+  
+      
 
-  for place in places:
-              
-    hotel.append(place.find_elements(By.CLASS_NAME,'sc-dtPURA sc-eMHdtS kDJmkU')
+
+
+
+
+
+
+      
