@@ -33,8 +33,10 @@ if __name__ =="__main__":
   places=get_places(driver)     
   place=places[0]
   hotel =[]
+  ratings =[]  
   for place in places: 
     print(place.find_element(By.XPATH,'.//div/section/div[1]/a').text)
+    print(place.find_element(By.CLASS_NAME,'sc-1q7bklc-5').text)      
   
   
       
