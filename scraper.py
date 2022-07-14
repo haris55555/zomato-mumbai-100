@@ -35,18 +35,23 @@ if __name__ =="__main__":
   place=places[0]
   hotel =[]
   ratings =[]  
+  link = []  
   for i in places:
       try:
         ratings.append(i.find_element(By.CLASS_NAME,'sc-1q7bklc-5').text) 
+        link.append(i.find_element(By.CLASS_NAME,'sc-cqKWdy').get_attribute('href'))  
       except:
         ratings.append('Not available')
   for place in places: 
       #try:
-        hotel.append(place.find_element(By.XPATH,'.//div/section/div[1]/a').text)  
+        hotel.append(place.find_element(By.XPATH,'.//div/section/div[1]/a').text) 
+        
         #ratings.append(place.find_element(By.CLASS_NAME,'sc-1q7bklc-5').text) 
      # except NoSuchElementException:
-        print(len(hotel))
-        print(hotel) 
-        print(len(ratings))  
-        print(ratings) 
+        
+        print('NAME:',hotel)  
+      
+        print('Ratings:', ratings)
+      
+        print('URL:',link)
   
