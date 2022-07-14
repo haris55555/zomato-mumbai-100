@@ -2,6 +2,7 @@ import time
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException
 zomato_mumbai_url = "https://www.zomato.com/mumbai/great-food-no-bull"
 
 def get_driver():
@@ -34,17 +35,18 @@ if __name__ =="__main__":
   place=places[0]
   hotel =[]
   ratings =[]  
+  for i in places:
+      try:
+        ratings.append(i.find_element(By.CLASS_NAME,'sc-1q7bklc-5').text) 
+      except:
+        ratings.append('Not available')
   for place in places: 
-    print(place.find_element(By.XPATH,'.//div/section/div[1]/a').text)
-    print(place.find_element(By.CLASS_NAME,'sc-1q7bklc-5').text)      
+      #try:
+        hotel.append(place.find_element(By.XPATH,'.//div/section/div[1]/a').text)  
+        #ratings.append(place.find_element(By.CLASS_NAME,'sc-1q7bklc-5').text) 
+     # except NoSuchElementException:
+        print(len(hotel))
+        print(hotel) 
+        print(len(ratings))  
+        print(ratings) 
   
-  
-      
-
-
-
-
-
-
-
-      
