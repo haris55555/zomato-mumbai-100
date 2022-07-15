@@ -1,26 +1,57 @@
-import requests
-from bs4 import BeautifulSoup
+import time
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException
 zomato_mumbai_url = "https://www.zomato.com/mumbai/great-food-no-bull"
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36',
-}
-response= requests.get(zomato_mumbai_url,headers=headers)
 
-print('status code',response.status_code)
-print('output',response.text[:1000])
-with open ('top.html','w') as f:
-  f.write(response.text)
-  doc= BeautifulSoup(response.text,'html.parser')
-  print('page title',doc.title.text)
-#root > div > div.sc-1mo3ldo-0.sc-jvJfuv.cauOir > div > section.sc-jnTLBE.gHfVcb > div > div:nth-child(1)
+def get_driver():
+ chrome_options=Options()
+ chrome_options.add_argument('--no-sandbox')
+ chrome_options.add_argument('--headless')
+ chrome_options.add_argument('--disable-dev-shm-usgae')
+ user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.517 Safari/537.36'
+ chrome_options.add_argument('user-agent=       {0}'.format(user_agent))
+ driver = webdriver.Chrome(options=chrome_options)
+ return driver
 
+def get_places(driver):
+  place_divs_tag = 'sc-bke1zw-0'
+  driver.get(zomato_mumbai_url)
+  time.sleep(5)
+  places = driver.find_element(By.CLASS_NAME,place_divs_tag)
+  tags=places.find_elements(By.CLASS_NAME,'sc-bke1zw-1')
+  return tags[:100]
+    
+if __name__ =="__main__":
+  driver = get_driver()
+  print('fetching lists')
+  x = get_places(driver)
+  print(len(x))
 
-
-sc-iVGVrG kVGNjl
-
-sc-bqxpbV dZTcKW
-
-
-
-sc-bke1zw-1 ixpGXU
-<section class="sc-ZUflv crxHpu"><a href="https://www.zomato.com/mumbai/foo-phoenix-palladium-lower-parel?zrp_bid=1136707&amp;zrp_pid=14&amp;zrp_cid=10027474" class="sc-hqGPoI sc-hPeUyl ixTQsM"><div height="100%" width="100%" class="sc-s1isp7-1 gMhjmN sc-esoVGF jXyKZU"><div src="" class="sc-s1isp7-3 cVOEqG"></div><img alt="Foo Phoenix Palladium" src="https://b.zmtcdn.com/data/pictures/9/18733959/97ddbbac0f258c57d24698b538d39a66.jpg?fit=around|318.75:231.25&amp;crop=318.75:231.25;*,*" loading="lazy" class="sc-s1isp7-5 fyZwWD"></div><section class="sc-cAJUJo kvtrEo"></section><section class="sc-gLdKKF ibNjdr"><div class="sc-evWYkj fBiQeq"><div class="sc-idjmjb cCRXmg"><i class="sc-rbbb40-1 iFnyeo" color="#FCFCFC" size="12"><svg xmlns="http://www.w3.org/2000/svg" fill="#FCFCFC" width="12" height="12" viewBox="0 0 20 20" aria-labelledby="icon-svg-title- icon-svg-desc-" role="img" class="sc-rbbb40-0 ezrcri"><title>crown</title><path d="M20,5.6c0-1.1-0.9-2-2-2c-1.1,0-2,0.9-2,2c0,0.4,0.1,0.8,0.3,1.1l-3.4,2.9l-2-3.5c1-0.5,1.3-1.7,0.8-2.7 C11.2,2.4,10,2,9.1,2.5S7.7,4.2,8.3,5.2C8.4,5.5,8.7,5.8,9.1,6l-2,3.5L3.6,6.7C4.2,5.8,4,4.5,3.1,3.9S1,3.5,0.3,4.4S0,6.6,0.9,7.2 c0.2,0.2,0.5,0.3,0.7,0.3L3.3,17c0.1,0.4,0.4,0.7,0.8,0.7h11.7c0.4,0,0.8-0.3,0.8-0.7l1.7-9.5C19.3,7.3,20,6.5,20,5.6z M15.1,16H4.9 L3.5,8.8l3.2,2.7c0.2,0.2,0.4,0.2,0.7,0.2c0.2,0,0.5-0.2,0.6-0.4l2-3.5l2,3.5c0.1,0.2,0.3,0.4,0.6,0.4c0.2,0,0.5,0,0.7-0.2l3.2-2.7 L15.1,16z"></path></svg></i></div><h6 class="sc-1gbvc19-0 sc-fHlXLc hDNxKc">Featured</h6></div></section></a><div class="sc-kDgGX kJgaHS"><a href="https://www.zomato.com/mumbai/foo-phoenix-palladium-lower-parel?zrp_bid=1136707&amp;zrp_pid=14&amp;zrp_cid=10027474" title="Foo Phoenix Palladium" class="sc-hqGPoI sc-cLxPOX irBifZ">Foo Phoenix Palladium</a><div class="sc-likbZx dICyAC"><div class="sc-1q7bklc-5 kHxpSk"><div color="#0E5020" height="2rem" width="2.6rem" font-size="1.3rem" class="sc-1q7bklc-10 fzeTVA"><div class="sc-1q7bklc-6 liCXOR"><div class="sc-1q7bklc-5 kHxpSk"><div class="sc-1q7bklc-1 cILgox">4.6</div><div class="sc-1q7bklc-2 pxJGx"><i class="sc-rbbb40-1 iFnyeo" color="#FFFFFF"><svg xmlns="http://www.w3.org/2000/svg" fill="#FFFFFF" width="0.8rem" height="0.8rem" viewBox="0 0 20 20" aria-labelledby="icon-svg-title- icon-svg-desc-" role="img" class="sc-rbbb40-0 fauQLv"><title>star-fill</title><path d="M6.76 6.8l-6.38 0.96c-0.22 0.040-0.38 0.22-0.38 0.44 0 0.12 0.040 0.24 0.12 0.32v0l4.64 4.76-1.1 6.66c0 0.020 0 0.040 0 0.080 0 0.24 0.2 0.44 0.44 0.44 0.1 0 0.16-0.020 0.24-0.060v0l5.7-3.12 5.68 3.12c0.060 0.040 0.14 0.060 0.22 0.060 0.24 0 0.44-0.2 0.44-0.44 0-0.040 0-0.060 0-0.080v0l-1.1-6.66 4.64-4.76c0.080-0.080 0.12-0.2 0.12-0.32 0-0.22-0.16-0.4-0.36-0.44h-0.020l-6.38-0.96-2.96-6.18c-0.060-0.12-0.18-0.2-0.32-0.2s-0.26 0.080-0.32 0.2v0z"></path></svg></i></div></div></div></div><div class="sc-1q7bklc-7 bzIMnO"><div class="sc-1q7bklc-8 kEgyiI"></div><div class="sc-1q7bklc-9 dYrjiw">DINING</div></div></div><div class="sc-eKZiaR imFFvZ"></div><div class="sc-1q7bklc-5 kHxpSk"><div color="#24963F" height="2rem" width="2.6rem" font-size="1.3rem" class="sc-1q7bklc-10 kgIEjH"><div class="sc-1q7bklc-6 liCXOR"><div class="sc-1q7bklc-5 kHxpSk"><div class="sc-1q7bklc-1 cILgox">4.0</div><div class="sc-1q7bklc-2 pxJGx"><i class="sc-rbbb40-1 iFnyeo" color="#FFFFFF"><svg xmlns="http://www.w3.org/2000/svg" fill="#FFFFFF" width="0.8rem" height="0.8rem" viewBox="0 0 20 20" aria-labelledby="icon-svg-title- icon-svg-desc-" role="img" class="sc-rbbb40-0 fauQLv"><title>star-fill</title><path d="M6.76 6.8l-6.38 0.96c-0.22 0.040-0.38 0.22-0.38 0.44 0 0.12 0.040 0.24 0.12 0.32v0l4.64 4.76-1.1 6.66c0 0.020 0 0.040 0 0.080 0 0.24 0.2 0.44 0.44 0.44 0.1 0 0.16-0.020 0.24-0.060v0l5.7-3.12 5.68 3.12c0.060 0.040 0.14 0.060 0.22 0.060 0.24 0 0.44-0.2 0.44-0.44 0-0.040 0-0.060 0-0.080v0l-1.1-6.66 4.64-4.76c0.080-0.080 0.12-0.2 0.12-0.32 0-0.22-0.16-0.4-0.36-0.44h-0.020l-6.38-0.96-2.96-6.18c-0.060-0.12-0.18-0.2-0.32-0.2s-0.26 0.080-0.32 0.2v0z"></path></svg></i></div></div></div></div><div class="sc-1q7bklc-7 bzIMnO"><div class="sc-1q7bklc-8 kEgyiI"></div><div class="sc-1q7bklc-9 dYrjiw">DELIVERY</div></div></div></div><div class="sc-ekHBYt wvAER"><a href="https://www.zomato.com/mumbai/restaurants/asian/" title="Asian" color="" class="sc-hqGPoI sc-eTyWNx iWqOkd">Asian</a><span class="sc-bsVVwV drHlVt">,&nbsp;</span><a href="https://www.zomato.com/mumbai/restaurants/chinese/" title="Chinese" color="" class="sc-hqGPoI sc-eTyWNx iWqOkd">Chinese</a><span class="sc-bsVVwV drHlVt">,&nbsp;</span><a href="https://www.zomato.com/mumbai/restaurants/sushi/" title="Sushi" color="" class="sc-hqGPoI sc-eTyWNx iWqOkd">Sushi</a><span class="sc-bsVVwV drHlVt">,&nbsp;</span><a href="https://www.zomato.com/mumbai/restaurants/desserts/" title="Desserts" color="" class="sc-hqGPoI sc-eTyWNx iWqOkd">Desserts</a><span class="sc-bsVVwV drHlVt">,&nbsp;</span><a href="https://www.zomato.com/mumbai/restaurants/beverages/" title="Beverages" color="" class="sc-hqGPoI sc-eTyWNx iWqOkd">Beverages</a></div><div class="sc-ekHBYt wvAER"><a href="https://www.zomato.com/mumbai/lower-parel-restaurants" title="High Street Phoenix, Lower Parel, Mumbai" color="" class="sc-hqGPoI sc-eTyWNx iWqOkd">High Street Phoenix, Lower Parel, Mumbai</a></div></div></section>
+  print('parsing the first place')
+# NAME,ratings,link 
+  places=get_places(driver)     
+  place=places[0]
+  hotel =[]
+  ratings =[]  
+  link = []  
+  for i in places:
+      try:
+        ratings[:100].append(i.find_element(By.CLASS_NAME,'sc-1q7bklc-5').text) 
+        link[:100].append(i.find_element(By.CLASS_NAME,'sc-cqKWdy').get_attribute('href'))
+      except:
+        ratings.append('')
+        link.append('')
+  for place in places: 
+        hotel[:100].append(place.find_element(By.XPATH,'.//div/section/div[1]/a').text) 
+        
+#ratings[:100].append(place.find_element(By.CLASS_NAME,'sc-1q7bklc-5').text) 
+        #except NoSuchElementException:
+        
+        print('NAME:',hotel)  
+        print(len(hotel))
+        print('Ratings:', ratings)
+        print(len(ratings))
+        print('URL:',link)
+        print(len(link))
