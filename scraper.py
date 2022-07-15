@@ -54,8 +54,8 @@ if __name__ =="__main__":
   x = get_places(driver)
   print(len(x))
   places_data = [parse_place(place) for place in places[:100]]
-  print(places_data[3])  
-  saving file to csv
+  print(places_data)
+  #saving file to_csv
   places_df= pd.DataFrame(places_data)
   print(places_data)  
   places_df.to_csv('TOP100.csv')  
