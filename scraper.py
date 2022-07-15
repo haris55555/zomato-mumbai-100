@@ -1,3 +1,4 @@
+import pandas as pd
 import time
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -53,6 +54,10 @@ if __name__ =="__main__":
   print(len(x))
   places_data = [parse_place(place) for place in places[:100]]
   print(places_data)  
-
+# saving file to csv
+ # places_df= pd.DataFrame(places_data)
+ # print(places_data)  
+ # places_df.to_csv('TOP100.csv')  
+    
  
         
