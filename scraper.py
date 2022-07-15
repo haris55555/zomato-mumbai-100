@@ -22,36 +22,37 @@ def get_places(driver):
   places = driver.find_element(By.CLASS_NAME,place_divs_tag)
   tags=places.find_elements(By.CLASS_NAME,'sc-bke1zw-1')
   return tags[:100]
-    
-if __name__ =="__main__":
-  driver = get_driver()
-  print('fetching lists')
-  x = get_places(driver)
-  print(len(x))
 
-  print('parsing the first place')
-# NAME,ratings,link 
+def parse_place(place):
+
   places=get_places(driver)     
   place=places[0]
   hotel =[]
   ratings =[]  
   link = []  
   for i in places:
-      try:
+    try:
         ratings.append(i.find_element(By.CLASS_NAME,'sc-1q7bklc-5').text) 
-        link.append(i.find_element(By.CLASS_NAME,'sc-cqKWdy').get_attribute('href'))
-      except:
+        link.append(i.find_element(By.TAG_NAME,'a').get_attribute('href'))
+    except:
         ratings.append('.')
         link.append('.')
-  for place in places:
+    for place in places:
         hotel.append(place.find_element(By.XPATH,'.//div/section/div[1]/a').text) 
+        return {
+            'NAME':hotel,
+            'RATINGS':ratings,
+            'LINK':link
+        }  
+    
+if __name__ =="__main__":
+  driver = get_driver()
+  places=get_places(driver)    
+  print('fetching top 100 places')
+  x = get_places(driver)
+  print(len(x))
+  places_data = [parse_place(place) for place in places[:100]]
+  print(places_data)  
+
+ 
         
-#ratings[:100].append(place.find_element(By.CLASS_NAME,'sc-1q7bklc-5').text) 
-        #except NoSuchElementException:
-        
-        print('NAME:',hotel[:100])  
-        print(len(hotel))
-        print('Ratings:', ratings[:100])
-        print(len(ratings))
-        print('URL:',link[:100])
-        print(len(link))
