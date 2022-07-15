@@ -29,7 +29,7 @@ if __name__ =="__main__":
   x = get_places(driver)
   print(len(x))
 
-  print('parsing the first place')
+  print('parsing the place')
 # NAME,ratings,link 
   places=get_places(driver)     
   place=places[0]
@@ -38,20 +38,20 @@ if __name__ =="__main__":
   link = []  
   for i in places:
       try:
-        ratings[:100].append(i.find_element(By.CLASS_NAME,'sc-1q7bklc-5').text) 
-        link[:100].append(i.find_element(By.CLASS_NAME,'sc-cqKWdy').get_attribute('href'))
+        ratings.append(i.find_element(By.CLASS_NAME,'sc-1q7bklc-5').text) 
+        link.append(i.find_element(By.TAG_NAME,'a').get_attribute('href'))
       except:
         ratings.append('')
         link.append('')
   for place in places: 
-        hotel[:100].append(place.find_element(By.XPATH,'.//div/section/div[1]/a').text) 
+        hotel.append(place.find_element(By.XPATH,'.//div/section/div[1]/a').text) 
         
 #ratings[:100].append(place.find_element(By.CLASS_NAME,'sc-1q7bklc-5').text) 
         #except NoSuchElementException:
         
-        print('NAME:',hotel)  
+        print('NAME:',hotel[:100])  
         print(len(hotel))
-        print('Ratings:', ratings)
+        print('Ratings:', ratings[:100])
         print(len(ratings))
-        print('URL:',link)
+        print('URL:',link[:100])
         print(len(link))

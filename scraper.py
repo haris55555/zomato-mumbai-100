@@ -48,16 +48,17 @@ def parse_place(place):
     
 if __name__ =="__main__":
   driver = get_driver()
-  places=get_places(driver)    
+  places=get_places(driver)   
+  place=places[0]  
   print('fetching top 100 places')
   x = get_places(driver)
   print(len(x))
   places_data = [parse_place(place) for place in places[:100]]
+  print(places_data[3])  
+  saving file to csv
+  places_df= pd.DataFrame(places_data)
   print(places_data)  
-# saving file to csv
- # places_df= pd.DataFrame(places_data)
- # print(places_data)  
- # places_df.to_csv('TOP100.csv')  
+  places_df.to_csv('TOP100.csv')  
     
  
         
