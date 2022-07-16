@@ -1,3 +1,6 @@
+import smtplib
+import os
+import json
 import pandas as pd
 import time
 from selenium import webdriver
@@ -24,10 +27,8 @@ def get_places(driver):
   tags=places.find_elements(By.CLASS_NAME,'sc-bke1zw-1')
   return tags[:100]
 
-def parse_place(place):
-
+def parse_place():
   places=get_places(driver)     
-  place=places[0]
   hotel =[]
   ratings =[]  
   link = []  
@@ -35,30 +36,64 @@ def parse_place(place):
     try:
         ratings.append(i.find_element(By.CLASS_NAME,'sc-1q7bklc-5').text) 
         link.append(i.find_element(By.TAG_NAME,'a').get_attribute('href'))
+        hotel.append(i.find_element(By.XPATH,'.//div/section/div[1]/a').text)
     except:
         ratings.append('.')
         link.append('.')
-    for place in places:
-        hotel.append(place.find_element(By.XPATH,'.//div/section/div[1]/a').text) 
-        return {
-            'NAME':hotel,
-            'RATINGS':ratings,
-            'LINK':link
+        hotel.append('.')
+    
+  return {
+            'NAME':hotel[:100],
+            'RATINGS':ratings[:100],
+            'LINK':link[:100]
         }  
+def send_email(body):
+   
+  try:
+    server_ssl = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+    server_ssl.ehlo()   # optional
+    
+    S_email='harisjovian777@gmail.com'
+    R_email='hai.advisoryservices@gmail.com'
+    S_password=os.environ['gmail_password']
+    
+    subject='list of top 100 restaurant in Mumbai for zomato'
+    
+    emailtext="""\
+    From:{S_email}
+    To:{R_email}
+    Subject:{subject}
+    {body}
+    """
+
+    server.login(S_email,S_password)
+    server_ssl.sendmail(S_email,R_email,emailtext)
+    server_ssl.close()
+  except:
+    print ('Something went wrong...')
     
 if __name__ =="__main__":
   driver = get_driver()
   places=get_places(driver)   
-  place=places[0]  
   print('fetching top 100 places')
   x = get_places(driver)
   print(len(x))
-  places_data = [parse_place(place) for place in places[:100]]
+  places_data = parse_place()
   print(places_data)
   #saving file to_csv
   places_df= pd.DataFrame(places_data)
   print(places_data)  
-  places_df.to_csv('TOP100.csv')  
+  places_df.to_csv('MUMBAI100.csv',index=False) 
+
+  print('send the result over email')
+  body=json.dumps(places_data, indent=2)
+  send_email(body)
+  print('DONE')
+    
+  
+    
+
+
     
  
         
