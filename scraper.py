@@ -21,120 +21,58 @@ def get_driver():
  driver = webdriver.Chrome(options=chrome_options)
  return driver
 
-def get_places(driver):
-  place_divs_tag = 'sc-bke1zw-0'
-  driver.get(zomato_mumbai_url)
-  time.sleep(5)
-  places = driver.find_element(By.CLASS_NAME,place_divs_tag)
-  tags=places.find_elements(By.CLASS_NAME,'sc-bke1zw-1')
-  return tags[:100]
-def parse_mumbai():
-  places=get_places(driver)     
-  hotel =[]
-  ratings =[]  
-  link = []   
-  for i in places:
-    try:
-        ratings.append(i.find_element(By.CLASS_NAME,'sc-1q7bklc-5').text) 
-        link.append(i.find_element(By.TAG_NAME,'a').get_attribute('href'))
-        hotel.append(i.find_element(By.XPATH,'.//div/section/div[1]/a').text)
-        
-    except:
-        ratings.append('.')
-        link.append('.')
-        hotel.append('.')
-    
-  return {
-            'NAME':hotel[:100],
-            'RATINGS':ratings[:100],
-            'LINK':link[:100]
-         }  
-def get_places1(driver):
-  place_divs_tag = 'sc-bke1zw-0'
-  driver.get(zomato_bangalore_url)
-  time.sleep(5)
-  places = driver.find_element(By.CLASS_NAME,place_divs_tag)
-  tags=places.find_elements(By.CLASS_NAME,'sc-bke1zw-1')
-  return tags[:100]  
+ driver=get_driver()   
 
-def parse_bangalore():
-  places=get_places1(driver)     
-  hotel =[]
-  ratings =[]  
-  link = []   
-  for i in places:
-    try:
-        ratings.append(i.find_element(By.CLASS_NAME,'sc-1q7bklc-5').text) 
-        link.append(i.find_element(By.TAG_NAME,'a').get_attribute('href'))
-        hotel.append(i.find_element(By.XPATH,'.//div/section/div[1]/a').text)
-        
-    except:
-        ratings.append('.')
-        link.append('.')
-        hotel.append('.')
-    
-  return {
-            'NAME':hotel[:100],
-            'RATINGS':ratings[:100],
-            'LINK':link[:100]
-         }      
-def get_places2(driver):
-  place_divs_tag = 'sc-bke1zw-0'
-  driver.get(zomato_pune_url)
-  time.sleep(5)
-  places = driver.find_element(By.CLASS_NAME,place_divs_tag)
-  tags=places.find_elements(By.CLASS_NAME,'sc-bke1zw-1')
-  return tags[:100]     
+def res_name(driver):
+   place_divs_tag = 'sc-bke1zw-0'
+   places = driver.find_element(By.CLASS_NAME,place_divs_tag)
+   tags=places.find_elements(By.CLASS_NAME,'sc-bke1zw-1')
+   res_names = []
+   for i in tags:
+    res_names.append(i.find_element(By.XPATH,".//div/section/div[1]/a").text)
+   return res_names[:100]
 
-def parse_pune():
-  places=get_places2(driver)     
-  hotel =[]
-  ratings =[]  
-  link = []   
-  for i in places:
-    try:
-        ratings.append(i.find_element(By.CLASS_NAME,'sc-1q7bklc-5').text) 
-        link.append(i.find_element(By.TAG_NAME,'a').get_attribute('href'))
-        hotel.append(i.find_element(By.XPATH,'.//div/section/div[1]/a').text)
-        
-    except:
-        ratings.append('.')
-        link.append('.')
-        hotel.append('.')
-    
-  return {
-            'NAME':hotel[:100],
-            'RATINGS':ratings[:100],
-            'LINK':link[:100]
-         }          
-  
+def res_url(driver):
+   place_divs_tag = 'sc-bke1zw-0' 
+   places = driver.find_element(By.CLASS_NAME,place_divs_tag)
+   tags=places.find_elements(By.CLASS_NAME,'sc-bke1zw-1')
+   urls = []
+   for i in tags:
+     urls.append(i.find_element(By.TAG_NAME,"a").get_attribute('href'))
+   return urls[:100]
+
+def res_ratings(driver):
+   place_divs_tag = 'sc-bke1zw-0'
+   places = driver.find_element(By.CLASS_NAME,place_divs_tag)
+   tags=places.find_elements(By.CLASS_NAME,'sc-bke1zw-1')
+   ratings = []
+   for i in tags:
+     try:     ratings.append(i.find_element(By.CLASS_NAME,'sc-1q7bklc-5').text)
+     except:
+          ratings.append('.')
+   return ratings[:100]   
+
+def get_all_cities():
+  cities = ['mumbai','bangalore','pune']
+ 
+  dic={'NAME':[],'RATINGS':[],'LINK':[]}  
+  for i in cities:
+    base_url = 'https://www.zomato.com/'+ i + '/great-food-no-bull'
+    driver.get(base_url)
+    dic['NAME'].extend(res_name(driver))
+    dic['RATINGS'].extend(res_ratings(driver)) 
+    dic['LINK'].extend(res_url(driver)) 
+  return dic      
+
+
 if __name__ =="__main__":
   driver = get_driver()
-  print('fetching top 100 places')
-  x=get_places(driver)
-  print(len(x))
-  y=get_places(driver)
-  print(len(y))
-  z=get_places2(driver)  
-  print(len(z))  
-#assigning variables to get seperate list of name,ratings,links for mum-bang-pune 
-  mumbai100=parse_mumbai()
-  print(mumbai100)  
-  bangalore100=parse_bangalore()
-  print(bangalore100)  
-  pune100=parse_pune()
-  print(pune100)  
-  #saving files to_csv
-  mumbaidf= pd.DataFrame(mumbai100)
-  mumbaidf.to_csv('mumbai.csv',index=False)  
-  bangaloredf= pd.DataFrame(bangalore100)
-  bangaloredf.to_csv('bangalore.csv',index=False)  
-  punedf= pd.DataFrame(pune100)
-  punedf.to_csv('pune.csv',index=False)   
+  print('Fetching Best 100 Places For 3 Locations')
+  mbp100=get_all_cities()
+  print(mbp100)  
+  best100df=pd.DataFrame(mbp100)
+  best100df.to_csv('best100.csv',index=False)  
 
-  data=[mumbaidf,bangaloredf,punedf]
-  zomatodf=pd.concat([mumbaidf,bangaloredf,punedf],axis=1,keys=['MUMBAI','BANGALORE','PUNE'])  
-  zomatodf.to_csv('zomato100.csv',index=False) 
 
   
 
