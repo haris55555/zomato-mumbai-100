@@ -1,6 +1,4 @@
-import smtplib
 import os
-import json
 import pandas as pd
 import time
 from selenium import webdriver
